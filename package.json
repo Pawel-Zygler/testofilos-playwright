@@ -1,0 +1,28 @@
+{
+  "name": "testofilos-playwright",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Playwright test suite for https://pawel-zygler.github.io/testofilos/",
+  "scripts": {
+    "test": "NODE_OPTIONS=\"--no-warnings --loader tsx\" playwright test",
+    "test:headed": "NODE_OPTIONS=\"--no-warnings --loader tsx\" playwright test --headed",
+    "test:ui": "NODE_OPTIONS=\"--no-warnings --loader tsx\" playwright test --ui",
+    "test:debug": "NODE_OPTIONS=\"--no-warnings --loader tsx\" playwright test --debug",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "testing",
+    "e2e",
+    "filozofia-testowania"
+  ],
+  "author": "Paweł Zygler",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  }
+}
