@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { TestofilosPage } from '../pages/TestofilosPage';
 
-test.describe('Philosophy of Testing - E2E tests', () => {
+test.describe('@smoke @e2e Philosophy of Testing - Language & Core Flow', () => {
   let testofilos: TestofilosPage;
 
   test.beforeEach(async ({ page }) => {
@@ -53,16 +53,15 @@ test.describe('Philosophy of Testing - E2E tests', () => {
     await expect(testofilos.enContent).toBeHidden();
   });
 
-  test('should display Laws of Testing in Polish version', async ({ page }) => {
-    const lawsSection = page.locator('#pl-laws');
-    await expect(lawsSection).toBeVisible();
-    await expect(lawsSection).toContainText('Prawo informacji');
-    await expect(lawsSection).toContainText('Prawo aksjomatu');
-    await expect(lawsSection).toContainText('Prawo asercji');
-    await expect(lawsSection).toContainText('Prawo granic');
-    await expect(lawsSection).toContainText('Prawo ryzyka');
-    await expect(lawsSection).toContainText('Prawo jakości');
-    await expect(lawsSection).toContainText('Prawo inspekcji');
+  test('should display Laws of Testing in Polish version', async () => {
+    await expect(testofilos.plLaws).toBeVisible();
+    await expect(testofilos.plLaws).toContainText('Prawo informacji');
+    await expect(testofilos.plLaws).toContainText('Prawo aksjomatu');
+    await expect(testofilos.plLaws).toContainText('Prawo asercji');
+    await expect(testofilos.plLaws).toContainText('Prawo granic');
+    await expect(testofilos.plLaws).toContainText('Prawo ryzyka');
+    await expect(testofilos.plLaws).toContainText('Prawo jakości');
+    await expect(testofilos.plLaws).toContainText('Prawo inspekcji');
   });
 
   test('should contain valid mailto contact link and footer', async () => {

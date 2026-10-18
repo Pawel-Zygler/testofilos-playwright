@@ -1,0 +1,84 @@
+name: Quality Gates & CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ─── JOB 1: SHIFT-LEFT STATIC ANALYSIS ───────────────────────────────────────
+  static-checks:
+    name: Lint & TypeCheck (Shift-Left)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate TypeScript Types
+        run: npx tsc --noEmit
+
+  # ─── JOB 2: QUALITY GATES & DEPLOYMENT BLOCKERS ──────────────────────────────
+  quality-gates:
+    name: Playwright Test Suite & Quality Gates
+    needs: static-checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      # ─── DEPLOYMENT BLOCKER 1: @smoke (Core Language & Functional Flows) ───
+      - name: "Run Smoke Tests (DEPLOYMENT BLOCKER)"
+        run: npm run test:smoke
+
+      # ─── DEPLOYMENT BLOCKER 2: @a11y (WCAG 2.1 AA Accessibility) ────────────
+      - name: "Run Accessibility Tests (DEPLOYMENT BLOCKER)"
+        run: npm run test:a11y
+
+      # ─── REGRESSION: Parity, Links & Remaining Tests ─────────────────────────
+      - name: "Run Full Regression & Content Parity"
+        run: npm run test:regression
+
+      - name: Upload Playwright Test Report Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 14
+
+  # ─── JOB 3: PRODUCTION DEPLOYMENT (Guarded by Quality Gates) ─────────────────
+  deploy-production:
+    name: Deploy to GitHub Pages (Guarded)
+    needs: quality-gates
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Quality Gate Verification Passed
+        run: |
+          echo "=========================================================="
+          echo " All Quality Gates passed successfully!"
+          echo " Smoke & a11y tests verified: 0 blockers found."
+          echo " Proceeding to GitHub Pages Production Release."
+          echo "=========================================================="

@@ -10,19 +10,24 @@ export class TestofilosPage {
   readonly enContent: Locator;
   readonly plToc: Locator;
   readonly enToc: Locator;
+  readonly plLaws: Locator;
+  readonly enLaws: Locator;
   readonly contactEmail: Locator;
   readonly footer: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.mainTitle = page.locator('#main-title');
-    this.mainSubtitle = page.locator('#main-subtitle');
-    this.plBtn = page.locator('#pl-btn');
-    this.enBtn = page.locator('#en-btn');
-    this.plContent = page.locator('#pl-content');
-    this.enContent = page.locator('#en-content');
+    // Supports both the new data-testid standard (Shift-Left) and existing HTML IDs
+    this.mainTitle = page.locator('[data-testid="main-title"], #main-title');
+    this.mainSubtitle = page.locator('[data-testid="main-subtitle"], #main-subtitle');
+    this.plBtn = page.locator('[data-testid="lang-switch-pl"], #pl-btn');
+    this.enBtn = page.locator('[data-testid="lang-switch-en"], #en-btn');
+    this.plContent = page.locator('[data-testid="pl-content"], #pl-content');
+    this.enContent = page.locator('[data-testid="en-content"], #en-content');
     this.plToc = page.locator('nav.toc[aria-label="Spis treści"]');
     this.enToc = page.locator('nav.toc[aria-label="Table of Contents"]');
+    this.plLaws = page.locator('[data-testid="pl-laws"], #pl-laws');
+    this.enLaws = page.locator('[data-testid="en-laws"], #en-laws');
     this.contactEmail = page.locator('a[href^="mailto:"]');
     this.footer = page.locator('.site-footer');
   }
@@ -43,5 +48,10 @@ export class TestofilosPage {
     await expect(this.plBtn).toHaveClass(/active/);
     await expect(this.plContent).not.toHaveClass(/hidden/);
     await expect(this.enContent).toHaveClass(/hidden/);
+  }
+
+  async getTocItems(lang: 'pl' | 'en'): Promise<string[]> {
+    const toc = lang === 'pl' ? this.plToc : this.enToc;
+    return await toc.locator('a').allInnerTexts();
   }
 }

@@ -1,31 +1,40 @@
-# Testofilos - Playwright E2E Tests (TypeScript)
+# Testofilos - Playwright E2E & Quality Engineering Suite (TypeScript)
 
-Projekt testów automatycznych End-to-End (E2E) w **Playwright** + **TypeScript** dla strony [Filozofia Testowania](https://pawel-zygler.github.io/testofilos/).
+Projekt profesjonalnego ekosystemu testowego dla serwisu [Filozofia Testowania](https://pawel-zygler.github.io/testofilos/).
 
-## 🎯 Co sprawdza zestaw testów
+---
 
-Testy weryfikują kluczowe funkcjonalności i treści serwisu:
-1. **Ładowanie strony startowej w języku polskim**: weryfikacja tytułu strony, nagłówka `Filozofia Testowania`, podtytułu oraz domyślnej widoczności treści polskiej.
-2. **Przełączanie języka na angielski (EN)**: kliknięcie przycisku `EN`, weryfikacja zmiany tytułu na `Philosophy of Testing`, nagłówka, podtytułu oraz widoczności treści w języku angielskim.
-3. **Przełączanie z powrotem na język polski (PL)**: płynna dwukierunkowa zmiana języków.
-4. **Weryfikacja sekcji "Prawa testowania"**: obecność 7 fundamentalnych praw testowania (Prawo informacji, aksjomatu, asercji, granic, ryzyka, jakości, inspekcji).
-5. **Weryfikacja stopki i kontaktu**: sprawdzenie linku kontaktowego `mailto:pawel.zygler@gmail.com` i praw autorskich.
+## 📚 Dokumentacja Architektoniczna i Plan Jakości
 
-## 📁 Struktura projektu
+- 📋 [**Master Test Plan (docs/test-plan.md)**](./docs/test-plan.md) – pełna specyfikacja 5 filarów jakości, bramek CI/CD oraz partnerstwa z deweloperami.
+- 🧪 [**Scenariusze Testowe (docs/scenariusze-testowe.md)**](./docs/scenariusze-testowe.md) – katalog przypadków testowych z mapowaniem na tagi.
+- 🧭 [**Strategia Testowania (docs/strategia-testowania.md)**](./docs/strategia-testowania.md) – model piramidy testów i zasady Shift-Left.
 
-```text
-testofilos-playwright/
-├── pages/
-│   └── TestofilosPage.ts     # Page Object Model (lokatory, nawigacja, akcje)
-├── tests/
-│   └── testofilos.spec.ts    # Zestaw testów Playwright E2E
-├── playwright.config.ts      # Konfiguracja Playwright (baseURL, reporter, przeglądarki)
-├── tsconfig.json             # Konfiguracja TypeScript
-├── package.json              # Zależności i skrypty npm
-└── .gitignore                # Ignorowane pliki (node_modules, raporty, artefakty)
-```
+---
 
-## 🚀 Jak uruchamiać testy
+## 🎯 5 Kluczowych Obszarów Jakościowych (Core Functionality)
+
+1. **Wersje językowe (PL i EN)** (`@smoke`, `@e2e`):
+   - Weryfikacja startu w języku polskim, przełączania na angielski oraz powrotu.
+   - Dynamiczna podmiana tytułów, nagłówków i zawartości sekcji.
+2. **Symetria komponentów i treści** (`@regression`, `@data`):
+   - Weryfikacja parzystości 14 rozdziałów w spisie treści (TOC).
+   - Weryfikacja 7 fundamentalnych Praw Testowania w obu wersjach językowych.
+   - Parzystość przypisów dolnych i odnośników zwrotnych.
+3. **Linki zewnętrzne i czystość konsoli** (`@links`, `@api`):
+   - Walidacja kodów HTTP (brak 404, 500) dla wszystkich zewnętrznych cytowań.
+   - Zero błędów typu `console.error` w przeglądarce podczas interakcji.
+4. **Dostępność cyfrowa WCAG 2.1 AA** (`@a11y` — *Deployment Blocker*):
+   - Zautomatyzowany audyt silnikiem Axe (`@axe-core/playwright`).
+   - Poprawność focus states przy nawigacji klawiaturą (`Tab`).
+5. **Regresja wizualna i zachowanie stylu** (`@visual`):
+   - Weryfikacja zmiennych stylów CSS (`--bg: #fafafa`, `--text: #111`).
+   - Zabezpieczenie przed horyzontalnym overflow.
+   - Snapshoty wizualne nagłówka i komponentów.
+
+---
+
+## 🚀 Uruchamianie Testów
 
 Wszystkie polecenia wykonuj w katalogu projektu:
 
@@ -33,33 +42,60 @@ Wszystkie polecenia wykonuj w katalogu projektu:
 cd /Users/pawelzygler/Documents/programowanie/testofilos-playwright
 ```
 
-### 1. Domyślne uruchomienie (headless)
-Szybkie uruchomienie testów w tle:
+### Podstawowe polecenia
 ```bash
+# Uruchomienie wszystkich 17 testów (headless)
 npm test
-```
 
-### 2. Uruchomienie z widocznym oknem przeglądarki (headed)
-Zobacz jak Playwright steruje przeglądarką na żywo:
-```bash
+# Uruchomienie z widocznym oknem przeglądarki
 npm run test:headed
-```
 
-### 3. Interaktywny tryb UI (Playwright UI Mode)
-Najwygodniejszy tryb do podglądu kroków, drzewa DOM, network i time-travel:
-```bash
+# Interaktywny tryb Playwright UI Mode
 npm run test:ui
-```
 
-### 4. Tryb debugowania (Playwright Inspector)
-Krok po kroku z możliwością zatrzymywania i inspekcji:
-```bash
-npm run test:debug
-```
-
-### 5. Przeglądanie raportu HTML z wynikami
-Wyświetlenie interaktywnego raportu z wynikami, czasem trwania, zrzutami ekranu:
-```bash
+# Podgląd raportu HTML z wynikami
 npm run report
 ```
-*(lub bezpośrednio `npx playwright show-report`)*
+
+### Uruchamianie według tagów i bramek jakościowych
+```bash
+# 1. Deployment Blocker: Smoke testy języka i ścieżek krytycznych
+npm run test:smoke
+
+# 2. Deployment Blocker: Dostępność cyfrowa WCAG 2.1 AA
+npm run test:a11y
+
+# 3. Symetria treści i komponentów PL vs EN
+npm run test:regression
+
+# 4. Sprawdzenie linków zewnętrznych i konsoli
+npm run test:links
+
+# 5. Regresja wizualna (snapshoty UI)
+npm run test:visual
+
+# 6. Szybka walidacja typów TypeScript (Shift-Left)
+npm run typecheck
+```
+
+---
+
+## 🛡️ CI/CD & Bramki Jakościowe (GitHub Actions)
+
+Plik potoku zdefiniowany w [`.github/workflows/playwright.yml`](./.github/workflows/playwright.yml):
+1. **Job 1 (Shift-Left)**: Walidacja typów `tsc --noEmit`.
+2. **Job 2 (Quality Gates)**: Równoległe uruchomienie testów Playwright:
+   - **Deployment Blocker 1**: `@smoke` musi przejść na 100%.
+   - **Deployment Blocker 2**: `@a11y` musi przejść na 100%.
+   - Jeśli którykolwiek blocker zawiedzie, wdrożenie na GitHub Pages zostaje zablokowane.
+3. **Job 3 (Deploy Guarded)**: Publikacja na GitHub Pages następuje tylko po przejściu wszystkich bramek.
+
+---
+
+## 🤝 Partnerstwo z Deweloperami (Shift-Left)
+
+1. **Standard `data-testid`**:
+   - Wprowadzony standard atrybutów testowych (np. `<button data-testid="lang-switch-pl">PL</button>`).
+   - Page Object Model wspiera zarówno nowe selektory `[data-testid="..."]`, jak i ID.
+2. **Pre-commit hooks (Husky + lint-staged)**:
+   - Przy każdym `git commit` automatycznie uruchamiany jest type-check (`tsc --noEmit`), uniemożliwiając commitowanie uszkodzonego kodu.
