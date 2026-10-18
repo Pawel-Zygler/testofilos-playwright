@@ -4,9 +4,9 @@ End-to-End test suite for [Filozofia Testowania](https://pawel-zygler.github.io/
 
 ## Documentation
 
-- [Test Plan](docs/test-plan.md) - test strategy, quality gates, and requirements
-- [Test Scenarios](docs/scenariusze-testowe.md) - test cases and priority matrix
-- [Strategy](docs/strategia-testowania.md) - testing model and principles
+- [Test Plan](docs/test-plan.md) - test scope, quality gates, and requirements
+- [Test Scenarios](docs/test-scenarios.md) - test cases and priority matrix
+- [Strategy](docs/test-strategy.md) - testing model and architectural principles
 
 ## Test Coverage
 
